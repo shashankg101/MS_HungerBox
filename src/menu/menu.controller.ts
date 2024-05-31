@@ -3,10 +3,11 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { Container } from '@azure/cosmos';
 import { MenuDto } from './menu.dto';
 import { menu } from './menu.entity';
-
+//import { cuuid } from 'cassandra-driver';
 
 @Controller('menu')
 export class MenuController {
+  private counter=5;
   constructor(@InjectModel(menu) private readonly menuContainer: Container) {}
 
   //Read all the items from the database
@@ -35,7 +36,8 @@ export class MenuController {
   @Post('create')
   async create(@Body() payload: MenuDto) {
     const newitem = new menu();
-    newitem.id = '2';
+    newitem.id = this.counter.toString();
+    this.counter++;
     newitem.outlet_name = payload.outlet_name;
     newitem.item_name = payload.item_name;
     newitem.calories = payload.calories;

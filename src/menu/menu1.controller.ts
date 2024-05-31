@@ -14,7 +14,7 @@ import { menu } from './menu.entity';
 import { MenuExceptionFilter } from 'src/Exceptions/menu-exception.filter';
 
 @Controller('menu1')
-@UseFilters(MenuExceptionFilter) // Use your custom exception filter
+@UseFilters(MenuExceptionFilter) 
 export class Menu1Controller {
   constructor(@InjectModel(menu) private readonly menuContainer: Container) {}
 
