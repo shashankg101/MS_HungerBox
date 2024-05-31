@@ -12,6 +12,7 @@ export class MenuController {
   //Read all the items from the database
   @Get('all')
   async getmenu() {
+
     const sqlQuery = 'select * from c';
 
     const cosmosResults = await this.menuContainer?.items
