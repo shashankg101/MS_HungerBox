@@ -32,7 +32,7 @@ export class MenuController {
         price: value.price,
       };
     });
-    return result;
+    return result;//result returned
   }
 
   //Create a new item in the database
