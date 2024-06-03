@@ -12,12 +12,11 @@ import { CorrelationIdMiddleware } from './correlation/correlation-id.middleware
       endpoint: 'https://ms-hunger-box.documents.azure.com:443/',
       key: 'V7mPnlWUZySjELD3z9VHsbj31ylLRmOw4A09moAFfRqsrADiLHzQQUMNT6KxM18dcLgDgXwC99x3ACDbYdzI0w==',
     }),
-    MenuModule
+    MenuModule, //menumodule
   ],
-  providers: [CorrelationIdService]
-  
-  
+  providers: [CorrelationIdService],
 })
+//hunger
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CorrelationIdMiddleware).forRoutes('*');
