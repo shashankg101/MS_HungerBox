@@ -12,11 +12,15 @@ import { Container } from '@azure/cosmos';
 import { MenuDto } from './menu.dto';
 import { menu } from './menu.entity';
 import { MenuExceptionFilter } from 'src/Exceptions/menu-exception.filter';
+import { CorrelationIdService } from 'src/correlation/correlation-id.service';
 
 @Controller('menu1')
-@UseFilters(MenuExceptionFilter) 
+@UseFilters(MenuExceptionFilter)
 export class Menu1Controller {
-  constructor(@InjectModel(menu) private readonly menuContainer: Container) {}
+  constructor(
+    @InjectModel(menu) private readonly menuContainer: Container,
+    private readonly correlationIdService: CorrelationIdService,
+  ) {}
 
   // Update an item in the database
   @Put('update')
@@ -29,7 +33,8 @@ export class Menu1Controller {
     itemupdate.price = payload.price;
 
     const { resource } = await this.menuContainer.items.upsert(itemupdate);
-
+    const correlationId = this.correlationIdService.getCorrelationId();
+    console.log(`Correlation ID: ${correlationId}`);
     return {
       id: resource.id,
       outlet_name: resource.outlet_name,
@@ -45,10 +50,11 @@ export class Menu1Controller {
     @Query('id') id: string,
     @Query('partitionkey') partitionkey: string,
   ) {
-    if (parseInt(id) < 0 || parseInt(id) > 10 ) {
+    if (parseInt(id) < 0 || parseInt(id) > 10) {
       throw new HttpException('Enter ID greater than 0 less than 10', 400);
     }
-    
+    const correlationId = this.correlationIdService.getCorrelationId();
+    console.log(`Correlation ID: ${correlationId}`);
     await this.menuContainer.item(id, partitionkey).delete();
     return 'deleted';
   }

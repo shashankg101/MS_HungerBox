@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
 import { MenuModule } from './menu/menu.module';
-
+import { CorrelationIdService } from './correlation/correlation-id.service';
+import { CorrelationIdMiddleware } from './correlation/correlation-id.middleware';
 
 @Module({
   imports: [
@@ -13,7 +14,12 @@ import { MenuModule } from './menu/menu.module';
     }),
     MenuModule
   ],
+  providers: [CorrelationIdService]
   
   
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}
