@@ -7,6 +7,7 @@ import {
   Put,
   Query,
   UseFilters,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Container } from '@azure/cosmos';
 import { MenuDto } from './menu.dto';
@@ -22,14 +23,13 @@ export class Menu1Controller {
     private readonly correlationIdService: CorrelationIdService,
   ) {}
 
-  // Update an item in the database
   @Put('update')
-  async update(@Body() payload: MenuDto) {
+  async update(@Body(new ValidationPipe()) payload: MenuDto) {
     const itemupdate = new menu();
     itemupdate.id = payload.id;
     itemupdate.outlet_name = payload.outlet_name;
     itemupdate.item_name = payload.item_name;
-    itemupdate.calories = payload.calories;
+    itemupdate.calories = payload.calories.toString();
     itemupdate.price = payload.price;
 
     const { resource } = await this.menuContainer.items.upsert(itemupdate);
@@ -44,11 +44,10 @@ export class Menu1Controller {
     };
   }
 
-  // Delete an item from the database
   @Delete('remove')
   async remove(
-    @Query('id') id: string,
-    @Query('partitionkey') partitionkey: string,
+    @Query('id', new ValidationPipe()) id: string,
+    @Query('partitionkey', new ValidationPipe()) partitionkey: string,
   ) {
     if (parseInt(id) < 0 || parseInt(id) > 10) {
       throw new HttpException('Enter ID greater than 0 less than 10', 400);
