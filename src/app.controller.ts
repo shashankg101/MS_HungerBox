@@ -3,7 +3,7 @@ import { AppService } from './app.service';
 import { MenuExceptionFilter } from './Exceptions/menu-exception.filter';
 
 @Controller()
-@UseFilters(new MenuExceptionFilter)
+@UseFilters(new MenuExceptionFilter())
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
