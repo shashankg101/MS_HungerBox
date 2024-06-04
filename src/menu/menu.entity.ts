@@ -8,4 +8,3 @@ export class menu {
   calories: string;
   price: number;
 }
-
